@@ -16,14 +16,14 @@ function playSound(event) {
   for (let i = 0; i < colorsArr.length; i++) {
     if (button.hasClass(colorsArr[i])) {
       color = colorsArr[i];
-      new Audio("sounds/" + color + ".mp3").play();
+      new Audio("public/sounds/" + color + ".mp3").play();
     }
   }
-  animate(button);
+  userPressedAnimate(button);
   addToList(color);
 }
 
-function animate(button) {
+function userPressedAnimate(button) {
   button.toggleClass("pressed");
   setTimeout(function () {
     button.toggleClass("pressed");
@@ -54,13 +54,14 @@ function continueGame() {
 function addToList(color) {
   userList.push(color);
 
-  if (simons[currentIndex] === userList[currentIndex]) {
-    currentIndex++;
-  } else {
-    //User chose the wrong block
+  const userChoseCorrectColor = simons[currentIndex] === userList[currentIndex];
+  if (!userChoseCorrectColor) {
     gameOver();
     return;
   }
+
+  currentIndex++;
+
   if (currentIndex == simons.length) {
     //new level
     userList = [];
@@ -79,29 +80,27 @@ function gameOver() {
   setTimeout(function () {
     $("body").toggleClass("game-over");
   }, 500);
-  animateEnding();
+  reloadPage(2000);
 }
 
-function animateEnding() {
-  // let totaltime = 1;
-  // for (let i = 0; i < simons.length; i++) {
-  //   console.log(simons[i]);
-  //   setTimeout(function () {
-  //     animate($("div." + simons[i]));
-  //     totaltime += i * 1000;
-  //   }, i * 1000);
-  // }
+function reloadPage(milsec) {
   setTimeout(function () {
     location.reload();
-  }, 2000);
+  }, milsec);
 }
 
 //This is to stop the page from scrolling up/down when using the arrow keys
 function stopDefaultScrolling() {
-  const keys = ["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+  const keysToStopDefault = [
+    "Space",
+    "ArrowUp",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight",
+  ];
   window.addEventListener("keydown", (event) => {
-    if (keys.includes(event.code)) {
-      e.preventDefault();
+    if (keysToStopDefault.includes(event.code)) {
+      event.preventDefault();
     }
   });
 }
