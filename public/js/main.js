@@ -75,7 +75,7 @@ function gameOver() {
   $(".btn").removeClass("cursor-pointer");
   $(document).off("keydown");
   $("#level-title").text("Game Over! Try Again!");
-  new Audio("sounds/wrong.mp3").play();
+  new Audio("public/sounds/wrong.mp3").play();
   $("body").toggleClass("game-over");
   setTimeout(function () {
     $("body").toggleClass("game-over");
