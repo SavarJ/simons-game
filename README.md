@@ -1,6 +1,6 @@
 # Simon's Game
 
-A clone of the popular Simon's Game in which you have to copy the pattern that is shown to you. In addition to clicking the corrct square, users can use the arrow keys.
+A clone of the popular Simon's Game in which you have to copy the pattern that is shown to you. In addition to clicking the correct square, users can use the arrow keys.
 
 ## Table of Contents
 
