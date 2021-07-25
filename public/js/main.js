@@ -1,6 +1,32 @@
+let level = 0;
+let userList = [];
+let simonsList = [];
+let currentIndex = 0;
+const colorsList = ["green", "red", "yellow", "blue"];
+const contolKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+$(document).keydown(startGame);
+
+function startGame() {
+  $(document).off("keydown");
+
+  stopDefaultScrolling();
+  $(".btn").addClass("cursor-pointer");
+  $(".btn").click(playSound);
+  $(document).keydown(playSound);
+
+  continueGame();
+}
+
+function continueGame() {
+  $("#level-title").text(`Level ${++level}`);
+  const randColor = pickRandomColor();
+  simonsList.push(randColor);
+  $(`.btn.${randColor}`).fadeOut(250).fadeIn(250);
+}
+
 function pickRandomColor() {
-  let randomNum = Math.floor(Math.random() * colorsArr.length);
-  return colorsArr[randomNum];
+  const randomNum = Math.floor(Math.random() * colorsList.length);
+  return colorsList[randomNum];
 }
 
 function playSound(event) {
@@ -9,61 +35,38 @@ function playSound(event) {
     if (!contolKeys.includes(event.key)) {
       return;
     }
-    button = $("#" + event.key);
+    button = $(`#${event.key}`);
   }
 
-  let color;
-  for (let i = 0; i < colorsArr.length; i++) {
-    if (button.hasClass(colorsArr[i])) {
-      color = colorsArr[i];
-      new Audio("public/sounds/" + color + ".mp3").play();
+  let color = null;
+  for (let i = 0; i < colorsList.length; i++) {
+    if (button.hasClass(colorsList[i])) {
+      color = colorsList[i];
+      new Audio(`public/sounds/${color}.mp3`).play();
     }
   }
-  userPressedAnimate(button);
+  animateClass(button, "pressed");
   addToList(color);
 }
 
-function userPressedAnimate(button) {
-  button.toggleClass("pressed");
+function animateClass(elemant, classToToggle) {
+  elemant.toggleClass(classToToggle);
   setTimeout(function () {
-    button.toggleClass("pressed");
-  }, 300);
-}
-
-function startGame() {
-  $(document).off("keydown");
-  stopDefaultScrolling();
-  $(".btn").click(playSound);
-  $(".btn").addClass("cursor-pointer");
-  $(document).keydown(playSound);
-  continueGame();
-}
-
-function continueGame() {
-  $("#level-title").text("Level " + ++level);
-
-  //   Pick random color, add it to the list, and animate it
-  let randColor = pickRandomColor();
-  simons.push(randColor);
-  // animate($(".btn." + randColor));
-  $(".btn." + randColor)
-    .fadeOut(250)
-    .fadeIn(250);
+    elemant.toggleClass(classToToggle);
+  }, 400);
 }
 
 function addToList(color) {
   userList.push(color);
-
-  const userChoseCorrectColor = simons[currentIndex] === userList[currentIndex];
+  const userChoseCorrectColor =
+    simonsList[currentIndex] === userList[currentIndex];
   if (!userChoseCorrectColor) {
     gameOver();
     return;
   }
-
   currentIndex++;
-
-  if (currentIndex == simons.length) {
-    //new level
+  const newLevel = currentIndex === simonsList.length;
+  if (newLevel) {
     userList = [];
     currentIndex = 0;
     setTimeout(continueGame, 1000);
@@ -71,16 +74,17 @@ function addToList(color) {
 }
 
 function gameOver() {
+  removeEventListeners();
+  $("#level-title").text("Game Over! Try Again!");
+  new Audio("public/sounds/wrong.mp3").play();
+  animateClass($("body"), "game-over");
+  reloadPage(2000);
+}
+
+function removeEventListeners() {
   $(".btn").off("click");
   $(".btn").removeClass("cursor-pointer");
   $(document).off("keydown");
-  $("#level-title").text("Game Over! Try Again!");
-  new Audio("public/sounds/wrong.mp3").play();
-  $("body").toggleClass("game-over");
-  setTimeout(function () {
-    $("body").toggleClass("game-over");
-  }, 500);
-  reloadPage(2000);
 }
 
 function reloadPage(milsec) {
@@ -89,7 +93,6 @@ function reloadPage(milsec) {
   }, milsec);
 }
 
-//This is to stop the page from scrolling up/down when using the arrow keys
 function stopDefaultScrolling() {
   const keysToStopDefault = [
     "Space",
@@ -104,11 +107,3 @@ function stopDefaultScrolling() {
     }
   });
 }
-
-let level = 0;
-let userList = [];
-let simons = [];
-let currentIndex = 0;
-let colorsArr = ["green", "red", "yellow", "blue"];
-let contolKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
-$(document).keydown(startGame);
