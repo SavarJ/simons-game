@@ -6,6 +6,7 @@ A clone of the popular Simon's Game in which you have to copy the pattern that i
 
 - [Deployment](#deployment)
 - [Built With](#built-with)
+- [Install](#install)
 - [Author(s)](#authors)
 - [License](#license)
 - [Acknowledgement](#acknowledgement)
@@ -26,6 +27,15 @@ A clone of the popular Simon's Game in which you have to copy the pattern that i
 - [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)
 - [Javascript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [jQuery](https://api.jquery.com/)
+
+## Install
+
+    $ git clone https://github.com/SavarJ/simons-game.git
+    $ cd simons-game
+    
+### Running the project
+
+    $ start index.html
 
 ## Author(s)
 
